@@ -347,7 +347,7 @@ sendEmailBtn.addEventListener('click', () => {
     }
 
     sendEmailBtn.disabled  = true;
-    sendEmailBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i><span>Sending…</span>';
+    sendEmailBtn.innerHTML = '<i class="fa-solid fa-plane-up fa-bounce"></i><span>Sending…</span>';
 
     fetch('/api/email', {
         method: 'POST',
