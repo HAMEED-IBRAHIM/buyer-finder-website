@@ -36,6 +36,7 @@ public class GeminiService {
     public GeminiService() {
         // 10s connect + 20s read timeout — fail fast instead of hanging
         // Fast timeouts so you never wait long
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
         factory.setConnectTimeout(3_000);
         factory.setReadTimeout(6_000);
         this.restTemplate = new RestTemplate(factory);
