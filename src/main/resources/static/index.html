@@ -17,11 +17,9 @@
             document.documentElement.style.setProperty('--overlay-display', 'flex');
         } else {
             document.documentElement.style.setProperty('--overlay-display', 'none');
+            // Hide body so unauthenticated flash never shows
+            document.write('<style>body { opacity: 0; }</style>');
         }
-        // Hide body so unauthenticated flash never shows
-        document.addEventListener('DOMContentLoaded', function() {
-            document.body.style.opacity = '0';
-        });
     </script>
     <style>
         /* ══════════════════════════════════════════════════════
