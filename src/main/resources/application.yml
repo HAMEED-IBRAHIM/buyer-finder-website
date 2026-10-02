@@ -8,25 +8,12 @@ spring:
             client-secret: ${GOOGLE_CLIENT_SECRET}
             scope: email, profile
   mail:
-    host: ${MAIL_HOST:smtp.gmail.com}
-    port: ${MAIL_PORT:465}
-    username: ${MAIL_USERNAME:your-email@gmail.com}
-    password: ${MAIL_PASSWORD:your-app-password}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          ssl:
-            enable: true
-            trust: smtp.gmail.com
-          socketFactory:
-            port: 465
-            class: javax.net.ssl.SSLSocketFactory
-            fallback: false
-          connectiontimeout: 10000
-          timeout: 10000
-          writetimeout: 10000
+    username: ${MAIL_USERNAME:}
 
 gemini:
   api:
     key: ${GEMINI_API_KEY}
+
+resend:
+  api:
+    key: ${RESEND_API_KEY:}
