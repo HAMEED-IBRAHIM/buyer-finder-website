@@ -29,15 +29,15 @@ public class GeminiService {
     // gemini-3.5-flash is confirmed working — put it FIRST to skip 503 waste
     // gemini-3.8-flash kept returning 503 (overloaded) — try it only as fallback
     private static final String[] MODELS = {
-        "gemini-3.5-flash",
-        "gemini-3.8-flash"
+        "gemini-1.5-flash",
+        "gemini-1.5-pro"
     };
 
     public GeminiService() {
         // 10s connect + 20s read timeout — fail fast instead of hanging
-        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-        factory.setConnectTimeout(10_000);
-        factory.setReadTimeout(20_000);
+        // Fast timeouts so you never wait long
+        factory.setConnectTimeout(3_000);
+        factory.setReadTimeout(6_000);
         this.restTemplate = new RestTemplate(factory);
     }
 
@@ -47,7 +47,7 @@ public class GeminiService {
         }
 
         String prompt = "You are a business lead generation assistant. " +
-            "Find 10 real or realistic potential buyers/businesses for: '" + query + "'. " +
+            "Find 5 real or realistic potential buyers/businesses for: '" + query + "'. " +
             "Return ONLY a valid JSON array with no extra text, no markdown, no code fences. " +
             "Each object must have exactly these 5 keys: " +
             "\"name\" (contact person name), " +
