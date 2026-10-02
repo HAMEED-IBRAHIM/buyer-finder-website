@@ -333,60 +333,47 @@ closeModal.addEventListener('click', closeModalFn);
 emailModal.addEventListener('click', e => { if (e.target === emailModal) closeModalFn(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalFn(); });
 
-// ─── Send Email ───────────────────────────────────────────────────────────
+// ─── Send Email (opens Gmail compose — works instantly, zero API needed) ─────
 sendEmailBtn.addEventListener('click', () => {
-    const payload = {
-        to:      emailTo.value.trim(),
-        subject: emailSubject.value.trim(),
-        body:    emailBody.value.trim()
-    };
+    const to      = emailTo.value.trim();
+    const subject = emailSubject.value.trim();
+    const body    = emailBody.value.trim();
 
-    if (!payload.to || !payload.subject || !payload.body) {
+    if (!to || !subject || !body) {
         showStatus('Please fill all fields.', false);
         return;
     }
 
-    sendEmailBtn.disabled  = true;
-    sendEmailBtn.innerHTML = '<i class="fa-solid fa-plane-up fa-bounce"></i><span>Sending…</span>';
+    // Build mailto: URL — opens Gmail or default mail client pre-filled
+    const mailtoUrl = `mailto:${encodeURIComponent(to)}`
+        + `?subject=${encodeURIComponent(subject)}`
+        + `&body=${encodeURIComponent(body)}`;
 
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000);
+    // Open Gmail compose in new tab
+    window.open(mailtoUrl, '_blank');
 
-    fetch('/api/email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-        signal: controller.signal
-    })
-    .then(async r => {
-        clearTimeout(timeoutId);
-        const data = await r.json().catch(() => ({}));
-        if (!r.ok || data.error) {
-            throw new Error(data.error || `HTTP ${r.status}: Failed to send email`);
-        }
-        return data;
-    })
-    .then(data => {
-        showStatus('✓ Email sent successfully!', true);
-        sendEmailBtn.innerHTML = '<i class="fa-solid fa-check"></i><span>Sent!</span>';
-        showToast('Pitch email sent! 🎉', '📬', 4000);
-        setTimeout(closeModalFn, 2000);
-    })
-    .catch(err => {
-        clearTimeout(timeoutId);
-        const errorMsg = err.name === 'AbortError'
-            ? 'Request timed out. Please check your network connection.'
-            : (err.message || 'Failed to send email.');
-        showStatus(errorMsg, false);
-        sendEmailBtn.disabled  = false;
-        sendEmailBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i><span>Retry</span>';
-    });
+    // Mark as sent in UI
+    sendEmailBtn.innerHTML = '<i class="fa-solid fa-check"></i><span>Sent!</span>';
+    sendEmailBtn.disabled = true;
+    showStatus('✓ Gmail opened! Click Send in your Gmail tab.', true);
+    showToast('Gmail compose opened! 📬', '✉️', 4000);
+
+    // Record pitch in tracker tabs
+    const nameEl = $('modal-buyer-name');
+    const parts  = (nameEl?.textContent || '').split(' · ');
+    if (typeof recordSentPitch === 'function') {
+        recordSentPitch(to, parts[0] || 'Buyer', parts[1] || '');
+    }
+
+    // Close modal after 2.5 seconds
+    setTimeout(closeModalFn, 2500);
 });
 
 function showStatus(msg, ok) {
     emailStatus.textContent = msg;
     emailStatus.className   = `email-status ${ok ? 'status-ok' : 'status-err'}`;
 }
+
 
 // ─── Navbar scroll ────────────────────────────────────────────────────────
 window.addEventListener('scroll', () => {
