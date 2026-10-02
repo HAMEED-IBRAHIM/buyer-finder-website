@@ -349,21 +349,35 @@ sendEmailBtn.addEventListener('click', () => {
     sendEmailBtn.disabled  = true;
     sendEmailBtn.innerHTML = '<i class="fa-solid fa-plane-up fa-bounce"></i><span>Sending…</span>';
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+
     fetch('/api/email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
+        signal: controller.signal
     })
-    .then(r => r.json())
+    .then(async r => {
+        clearTimeout(timeoutId);
+        const data = await r.json().catch(() => ({}));
+        if (!r.ok || data.error) {
+            throw new Error(data.error || `HTTP ${r.status}: Failed to send email`);
+        }
+        return data;
+    })
     .then(data => {
-        if (data.error) throw new Error(data.error);
         showStatus('✓ Email sent successfully!', true);
         sendEmailBtn.innerHTML = '<i class="fa-solid fa-check"></i><span>Sent!</span>';
         showToast('Pitch email sent! 🎉', '📬', 4000);
         setTimeout(closeModalFn, 2000);
     })
-    .catch(() => {
-        showStatus('SMTP not configured. Set MAIL_USERNAME and MAIL_PASSWORD.', false);
+    .catch(err => {
+        clearTimeout(timeoutId);
+        const errorMsg = err.name === 'AbortError'
+            ? 'Request timed out. Please check your network connection.'
+            : (err.message || 'Failed to send email.');
+        showStatus(errorMsg, false);
         sendEmailBtn.disabled  = false;
         sendEmailBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i><span>Retry</span>';
     });
