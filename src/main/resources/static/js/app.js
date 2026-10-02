@@ -66,7 +66,7 @@ fetch('/api/user')
         const isGoogleAuth = data.email && data.email !== 'demo@decorleads.com';
 
         if (!isGoogleAuth && !isDemoMode) {
-            window.location.href = '/login.html';
+            window.location.replace('/login.html');
             return;
         }
 
@@ -81,20 +81,35 @@ fetch('/api/user')
         // Check if we just came from Google Login
         if (sessionStorage.getItem('playLaunchAnim') === 'true') {
             sessionStorage.removeItem('playLaunchAnim');
-            
+
             const overlay = $('launch-overlay');
             if (overlay) {
-                overlay.classList.add('active');
-                setTimeout(() => { overlay.classList.remove('active'); }, 2100);
+                // Make sure it's visible (CSS var already set it, but just in case)
+                overlay.style.display = 'flex';
+
+                // Restart animation by forcing a reflow
+                const plane = $('plane-wrapper');
+                if (plane) {
+                    plane.style.animation = 'none';
+                    void plane.offsetWidth;
+                    plane.style.animation = '';
+                }
+
+                // After animation completes, hide overlay and show page
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                    document.body.style.opacity = '1';
+                }, 2100);
             }
         } else {
-            // Only show welcome toast if we didn't just play the loud launch anim
+            // No animation — just reveal the page
+            document.body.style.opacity = '1';
             const name = (data.name || 'there').split(' ')[0];
             setTimeout(() => showToast(`Welcome, ${name}! Start searching for buyers below.`, '👋'), 600);
         }
     })
     .catch(() => {
-        window.location.href = '/login.html';
+        window.location.replace('/login.html');
     });
 
 function enableSearch() {
