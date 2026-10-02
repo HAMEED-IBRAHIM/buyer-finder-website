@@ -51,11 +51,9 @@ public class EmailService {
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.setBearerAuth(resendApiKey);
 
-            // Sender: use verified domain email if set, else Resend's free test address
-            String fromAddress = (mailUsername != null && !mailUsername.isEmpty()
-                    && !mailUsername.equalsIgnoreCase("your-email@gmail.com"))
-                    ? "DecorLeads <" + mailUsername + ">"
-                    : "DecorLeads <onboarding@resend.dev>";
+            // Always use Resend's verified sender for free tier
+            // (Custom domains like gmail.com require domain verification on Resend)
+            String fromAddress = "DecorLeads <onboarding@resend.dev>";
 
             Map<String, Object> payload = new HashMap<>();
             payload.put("from", fromAddress);
