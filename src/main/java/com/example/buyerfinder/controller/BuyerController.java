@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/api")
@@ -27,7 +29,6 @@ public class BuyerController {
     @GetMapping("/user")
     public ResponseEntity<Map<String, Object>> getUser(@AuthenticationPrincipal OAuth2User principal) {
         if (principal == null) {
-            // Demo mode: return a guest user so UI enables search
             return ResponseEntity.ok(Map.of(
                 "name", "Demo User",
                 "email", "demo@decorleads.com",
@@ -43,18 +44,25 @@ public class BuyerController {
 
     @GetMapping("/search")
     public ResponseEntity<List<Buyer>> searchBuyers(@RequestParam String query, @AuthenticationPrincipal OAuth2User principal) {
-        // Allow search in demo mode too
         List<Buyer> buyers = geminiService.findBuyers(query);
         return ResponseEntity.ok(buyers);
     }
 
     @PostMapping("/email")
-    public ResponseEntity<Map<String, String>> sendEmail(@RequestBody EmailRequest request, @AuthenticationPrincipal OAuth2User principal) {
+    public ResponseEntity<Map<String, String>> sendEmail(@RequestBody EmailRequest request,
+                                                         @AuthenticationPrincipal OAuth2User principal) {
         try {
-            emailService.sendEmail(request.getTo(), request.getSubject(), request.getBody());
+            // Fire async; wait up to 8 seconds so Render doesn't timeout the request
+            CompletableFuture<String> future = emailService.sendEmail(
+                    request.getTo(), request.getSubject(), request.getBody());
+            future.get(8, TimeUnit.SECONDS);
             return ResponseEntity.ok(Map.of("status", "Email sent successfully"));
+        } catch (java.util.concurrent.TimeoutException te) {
+            // Still accepted — email is still sending in background
+            return ResponseEntity.ok(Map.of("status", "Email queued — it may take a moment to arrive"));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(Map.of("error", "Failed to send email: " + e.getMessage()));
+            Throwable cause = e.getCause() != null ? e.getCause() : e;
+            return ResponseEntity.status(500).body(Map.of("error", "Failed to send email: " + cause.getMessage()));
         }
     }
 }

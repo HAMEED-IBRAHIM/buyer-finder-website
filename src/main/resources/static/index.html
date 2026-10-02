@@ -432,6 +432,183 @@
             0%   { transform:translateX(-50%) scale(0); opacity:0.8; }
             100% { transform:translateX(-50%) scale(8); opacity:0; }
         }
+        /* ══════════════════════════════════════════════════════
+           SLIDING TABS
+           ══════════════════════════════════════════════════════ */
+        .tabs-bar {
+            display: flex;
+            gap: 4px;
+            background: var(--surface, #fff);
+            border: 1px solid var(--border, #e3e8f5);
+            border-radius: 14px;
+            padding: 6px;
+            width: fit-content;
+            margin: 32px auto 0;
+            position: relative;
+            box-shadow: 0 4px 24px rgba(59,91,219,.07);
+        }
+        .tab-btn {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 9px 20px;
+            border: none;
+            background: transparent;
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.87rem;
+            font-weight: 600;
+            color: var(--text-3, #9099b3);
+            cursor: pointer;
+            transition: color 0.25s ease;
+            white-space: nowrap;
+        }
+        .tab-btn.active {
+            color: var(--brand, #3b5bdb);
+            background: rgba(59,91,219,.08);
+        }
+        .tab-btn i { font-size: 0.95rem; }
+        .tab-notif {
+            position: absolute;
+            top: 4px; right: 6px;
+            min-width: 18px; height: 18px;
+            background: var(--brand, #3b5bdb);
+            color: #fff;
+            font-size: 0.68rem;
+            font-weight: 700;
+            border-radius: 9px;
+            display: flex; align-items: center; justify-content: center;
+            padding: 0 4px;
+            animation: notifPop 0.35s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        @keyframes notifPop {
+            from { transform: scale(0); }
+            to   { transform: scale(1); }
+        }
+        .tab-notif.hidden { display: none; }
+
+        /* Tab panels */
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        /* ── Sent Pitches / Proposals / Accepted panels ─── */
+        .pitch-panel {
+            max-width: 900px;
+            margin: 28px auto;
+            padding: 0 20px;
+        }
+        .pitch-panel-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 18px;
+        }
+        .pitch-panel-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.3rem; font-weight: 800;
+            color: var(--text, #1a1d26);
+        }
+        .pitch-panel-sub {
+            font-size: 0.83rem; color: var(--text-3, #9099b3); margin-top: 3px;
+        }
+        .pitch-clear-btn {
+            padding: 7px 16px;
+            border: 1px solid var(--border, #e3e8f5);
+            border-radius: 8px;
+            background: transparent;
+            font-size: 0.8rem; font-weight: 600;
+            color: var(--text-3, #9099b3);
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+        }
+        .pitch-clear-btn:hover { border-color: #e8590c; color: #e8590c; }
+
+        .pitch-list { display: flex; flex-direction: column; gap: 12px; }
+        .pitch-card {
+            background: var(--surface, #fff);
+            border: 1px solid var(--border, #e3e8f5);
+            border-radius: 14px;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: box-shadow 0.2s, transform 0.2s;
+            animation: cardPop 0.3s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        .pitch-card:hover {
+            box-shadow: 0 6px 28px rgba(59,91,219,.1);
+            transform: translateY(-2px);
+        }
+        .pitch-avatar {
+            width: 44px; height: 44px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; font-weight: 800; color: #fff;
+            flex-shrink: 0;
+        }
+        .pitch-info { flex: 1; min-width: 0; }
+        .pitch-name { font-weight: 700; font-size: 0.95rem; color: var(--text,#1a1d26); }
+        .pitch-company { font-size: 0.82rem; color: var(--text-3,#9099b3); margin-top: 2px; }
+        .pitch-email-line { font-size: 0.82rem; color: var(--text-2,#4a5068); margin-top: 4px; }
+        .pitch-time { font-size: 0.76rem; color: var(--text-3,#9099b3); white-space: nowrap; }
+        .pitch-status-badge {
+            padding: 4px 12px; border-radius: 20px;
+            font-size: 0.76rem; font-weight: 700;
+            flex-shrink: 0;
+        }
+        .badge-sent     { background: rgba(59,91,219,.1);  color: #3b5bdb; }
+        .badge-accepted { background: rgba(12,166,120,.1); color: #0ca678; }
+        .badge-pending  { background: rgba(250,176,5,.12); color: #d4a000; }
+        .badge-declined { background: rgba(240,68,56,.1);  color: #d63031; }
+
+        .pitch-actions { display: flex; gap: 8px; }
+        .pitch-action-btn {
+            width: 32px; height: 32px; border-radius: 8px;
+            border: 1px solid var(--border,#e3e8f5);
+            background: transparent;
+            cursor: pointer; font-size: 0.85rem;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .pitch-action-btn:hover { background: rgba(59,91,219,.08); border-color: var(--brand,#3b5bdb); }
+        .pitch-action-btn.accept:hover { background: rgba(12,166,120,.1); border-color: #0ca678; color: #0ca678; }
+        .pitch-action-btn.decline:hover { background: rgba(240,68,56,.1); border-color: #d63031; color: #d63031; }
+
+        /* Empty state */
+        .pitch-empty {
+            text-align: center; padding: 60px 20px;
+            color: var(--text-3,#9099b3);
+        }
+        .pitch-empty-icon { font-size: 3rem; margin-bottom: 16px; opacity: 0.6; }
+        .pitch-empty-title { font-size: 1.05rem; font-weight: 700; color: var(--text-2,#4a5068); margin-bottom: 6px; }
+        .pitch-empty-sub { font-size: 0.85rem; }
+
+        /* Accepted deal card extra */
+        .accepted-tag {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 3px 10px; border-radius: 20px;
+            background: rgba(12,166,120,.12); color: #0ca678;
+            font-size: 0.76rem; font-weight: 700;
+        }
+
+        /* Notification toaster for accepted deal */
+        .deal-notif-toast {
+            position: fixed; top: 80px; right: 24px;
+            background: linear-gradient(135deg,#0ca678,#20c997);
+            color: #fff;
+            padding: 16px 20px;
+            border-radius: 14px;
+            font-size: 0.9rem; font-weight: 600;
+            box-shadow: 0 8px 32px rgba(12,166,120,.35);
+            display: flex; align-items: center; gap: 12px;
+            z-index: 9999;
+            transform: translateX(120%);
+            transition: transform 0.45s cubic-bezier(0.34,1.56,0.64,1);
+            max-width: 320px;
+        }
+        .deal-notif-toast.show { transform: translateX(0); }
+        .deal-notif-icon { font-size: 1.5rem; }
+        .deal-notif-text .deal-notif-title { font-size: 0.95rem; font-weight: 800; }
+        .deal-notif-text .deal-notif-sub { font-size: 0.8rem; opacity: 0.88; margin-top: 2px; }
     </style>
 </head>
 <body>
@@ -619,6 +796,37 @@
         </div>
     </header>
 
+    <!-- ══ DEAL NOTIFICATION TOAST ══ -->
+    <div id="deal-notif-toast" class="deal-notif-toast">
+        <div class="deal-notif-icon">🎉</div>
+        <div class="deal-notif-text">
+            <div class="deal-notif-title">Deal Accepted!</div>
+            <div class="deal-notif-sub" id="deal-notif-sub">A buyer accepted your proposal.</div>
+        </div>
+    </div>
+
+    <!-- ══ DASHBOARD TABS BAR ══ -->
+    <div class="tabs-bar" id="tabs-bar">
+        <button class="tab-btn active" id="tab-search" data-tab="search" onclick="switchTab('search')">
+            <i class="fa-solid fa-magnifying-glass"></i> Search
+        </button>
+        <button class="tab-btn" id="tab-sent" data-tab="sent" onclick="switchTab('sent')">
+            <i class="fa-solid fa-paper-plane"></i> Sent Pitches
+            <span class="tab-notif hidden" id="notif-sent">0</span>
+        </button>
+        <button class="tab-btn" id="tab-proposals" data-tab="proposals" onclick="switchTab('proposals')">
+            <i class="fa-solid fa-file-contract"></i> Proposals
+            <span class="tab-notif hidden" id="notif-proposals">0</span>
+        </button>
+        <button class="tab-btn" id="tab-accepted" data-tab="accepted" onclick="switchTab('accepted')">
+            <i class="fa-solid fa-handshake"></i> Accepted Deals
+            <span class="tab-notif hidden" id="notif-accepted">0</span>
+        </button>
+    </div>
+
+    <!-- ══ TAB: SEARCH (Results Section) ══ -->
+    <div class="tab-panel active" id="panel-search">
+
     <!-- Results Section -->
     <main class="results-section hidden" id="results-section">
         <div class="results-inner">
@@ -692,6 +900,67 @@
             </div>
         </div>
     </main>
+    </div><!-- /panel-search -->
+
+    <!-- ══ TAB: SENT PITCHES ══ -->
+    <div class="tab-panel" id="panel-sent">
+        <div class="pitch-panel">
+            <div class="pitch-panel-header">
+                <div>
+                    <div class="pitch-panel-title"><i class="fa-solid fa-paper-plane" style="color:var(--brand)"></i> Sent Pitches</div>
+                    <div class="pitch-panel-sub">All emails you've sent to potential buyers</div>
+                </div>
+                <button class="pitch-clear-btn" onclick="clearPitches('sent')">Clear All</button>
+            </div>
+            <div class="pitch-list" id="sent-list">
+                <div class="pitch-empty">
+                    <div class="pitch-empty-icon">✉️</div>
+                    <div class="pitch-empty-title">No pitches sent yet</div>
+                    <div class="pitch-empty-sub">Search for buyers and click "Send Pitch" to get started</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ TAB: PROPOSALS ══ -->
+    <div class="tab-panel" id="panel-proposals">
+        <div class="pitch-panel">
+            <div class="pitch-panel-header">
+                <div>
+                    <div class="pitch-panel-title"><i class="fa-solid fa-file-contract" style="color:#7048e8"></i> Proposals</div>
+                    <div class="pitch-panel-sub">Track and manage buyer proposals — mark accepted or declined</div>
+                </div>
+                <button class="pitch-clear-btn" onclick="clearPitches('proposals')">Clear All</button>
+            </div>
+            <div class="pitch-list" id="proposals-list">
+                <div class="pitch-empty">
+                    <div class="pitch-empty-icon">📋</div>
+                    <div class="pitch-empty-title">No proposals yet</div>
+                    <div class="pitch-empty-sub">Sent pitches automatically appear here. Mark them as Accepted or Declined.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ TAB: ACCEPTED DEALS ══ -->
+    <div class="tab-panel" id="panel-accepted">
+        <div class="pitch-panel">
+            <div class="pitch-panel-header">
+                <div>
+                    <div class="pitch-panel-title"><i class="fa-solid fa-handshake" style="color:#0ca678"></i> Accepted Deals</div>
+                    <div class="pitch-panel-sub">Buyers who agreed to partner with you 🎉</div>
+                </div>
+                <button class="pitch-clear-btn" onclick="clearPitches('accepted')">Clear All</button>
+            </div>
+            <div class="pitch-list" id="accepted-list">
+                <div class="pitch-empty">
+                    <div class="pitch-empty-icon">🤝</div>
+                    <div class="pitch-empty-title">No accepted deals yet</div>
+                    <div class="pitch-empty-sub">When a buyer accepts your proposal, it appears here with a notification!</div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">
@@ -752,5 +1021,209 @@ Best regards,
     </div>
 
     <script src="/js/app.js"></script>
+    <script>
+    /* ══════════════════════════════════════════════════════
+       TABS + PITCH TRACKER
+       ══════════════════════════════════════════════════════ */
+    const AVATAR_GRADS = [
+        'linear-gradient(135deg,#3b5bdb,#5c7cfa)',
+        'linear-gradient(135deg,#0ca678,#20c997)',
+        'linear-gradient(135deg,#7048e8,#9775fa)',
+        'linear-gradient(135deg,#e8590c,#fd7e14)',
+        'linear-gradient(135deg,#1098ad,#22b8cf)',
+        'linear-gradient(135deg,#d6336c,#f06595)',
+    ];
+
+    /* ── Tab switching ───────────────────────────────────── */
+    function switchTab(tab) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        document.getElementById('tab-' + tab).classList.add('active');
+        document.getElementById('panel-' + tab).classList.add('active');
+        // Clear badge when opening that tab
+        const notif = document.getElementById('notif-' + tab);
+        if (notif) notif.classList.add('hidden');
+    }
+
+    /* ── localStorage helpers ────────────────────────────── */
+    function loadPitches(key) {
+        try { return JSON.parse(localStorage.getItem('dl_' + key) || '[]'); }
+        catch { return []; }
+    }
+    function savePitches(key, arr) {
+        localStorage.setItem('dl_' + key, JSON.stringify(arr));
+    }
+    function clearPitches(key) {
+        if (!confirm('Clear all ' + key + '?')) return;
+        savePitches(key, []);
+        renderPitchList(key);
+        updateBadges();
+    }
+
+    /* ── Add a sent pitch entry ──────────────────────────── */
+    function recordSentPitch(to, name, company) {
+        const sent = loadPitches('sent');
+        const proposals = loadPitches('proposals');
+        const entry = {
+            id: Date.now(),
+            to, name, company,
+            time: new Date().toISOString(),
+            status: 'pending'
+        };
+        sent.unshift(entry);
+        proposals.unshift(Object.assign({}, entry));
+        savePitches('sent', sent);
+        savePitches('proposals', proposals);
+        renderPitchList('sent');
+        renderPitchList('proposals');
+        updateBadges();
+    }
+
+    /* ── Mark proposal accepted / declined ───────────────── */
+    function markProposal(id, status) {
+        const proposals = loadPitches('proposals');
+        const idx = proposals.findIndex(p => p.id === id);
+        if (idx === -1) return;
+        proposals[idx].status = status;
+        savePitches('proposals', proposals);
+
+        if (status === 'accepted') {
+            const accepted = loadPitches('accepted');
+            const already = accepted.find(a => a.id === id);
+            if (!already) {
+                accepted.unshift(Object.assign({}, proposals[idx], { acceptedAt: new Date().toISOString() }));
+                savePitches('accepted', accepted);
+                renderPitchList('accepted');
+                showDealNotif(proposals[idx].name, proposals[idx].company);
+                // badge on accepted tab
+                const nb = document.getElementById('notif-accepted');
+                if (nb) { nb.textContent = loadPitches('accepted').length; nb.classList.remove('hidden'); }
+            }
+        }
+        renderPitchList('proposals');
+        updateBadges();
+    }
+
+    /* ── Deal notification toast ─────────────────────────── */
+    function showDealNotif(name, company) {
+        const t = document.getElementById('deal-notif-toast');
+        document.getElementById('deal-notif-sub').textContent = name + ' from ' + company + ' accepted your proposal!';
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 5000);
+    }
+
+    /* ── Render a pitch list ─────────────────────────────── */
+    function renderPitchList(key) {
+        const list = document.getElementById(key + '-list');
+        if (!list) return;
+        const items = loadPitches(key);
+        if (!items.length) {
+            const empties = {
+                sent:      { icon: '✉️',  title: 'No pitches sent yet',         sub: 'Search for buyers and click "Send Pitch" to get started' },
+                proposals: { icon: '📋',  title: 'No proposals yet',            sub: 'Sent pitches automatically appear here as proposals.' },
+                accepted:  { icon: '🤝',  title: 'No accepted deals yet',      sub: 'Mark proposals as Accepted when a buyer says yes!' }
+            };
+            const e = empties[key];
+            list.innerHTML = `<div class="pitch-empty"><div class="pitch-empty-icon">${e.icon}</div><div class="pitch-empty-title">${e.title}</div><div class="pitch-empty-sub">${e.sub}</div></div>`;
+            return;
+        }
+        list.innerHTML = items.map((p, i) => {
+            const grad = AVATAR_GRADS[i % AVATAR_GRADS.length];
+            const initial = (p.name || 'B').charAt(0).toUpperCase();
+            const timeStr = formatTime(p.time);
+            let badgeHtml = '';
+            let actionsHtml = '';
+
+            if (key === 'sent') {
+                badgeHtml = `<span class="pitch-status-badge badge-sent">Sent</span>`;
+            } else if (key === 'proposals') {
+                const cls = p.status === 'accepted' ? 'badge-accepted' : p.status === 'declined' ? 'badge-declined' : 'badge-pending';
+                const label = p.status === 'accepted' ? '✓ Accepted' : p.status === 'declined' ? '✕ Declined' : '⏳ Pending';
+                badgeHtml = `<span class="pitch-status-badge ${cls}">${label}</span>`;
+                if (p.status === 'pending') {
+                    actionsHtml = `
+                        <div class="pitch-actions">
+                            <button class="pitch-action-btn accept" onclick="markProposal(${p.id},'accepted')" title="Mark Accepted"><i class="fa-solid fa-check"></i></button>
+                            <button class="pitch-action-btn decline" onclick="markProposal(${p.id},'declined')" title="Mark Declined"><i class="fa-solid fa-xmark"></i></button>
+                        </div>`;
+                }
+            } else if (key === 'accepted') {
+                badgeHtml = `<span class="pitch-status-badge badge-accepted">✓ Accepted</span>`;
+            }
+
+            return `
+            <div class="pitch-card" id="pc-${key}-${p.id}">
+                <div class="pitch-avatar" style="background:${grad}">${initial}</div>
+                <div class="pitch-info">
+                    <div class="pitch-name">${escHtml(p.name || 'Unknown')}</div>
+                    <div class="pitch-company">${escHtml(p.company || '')}</div>
+                    <div class="pitch-email-line"><i class="fa-solid fa-envelope" style="font-size:.75rem;margin-right:4px;"></i>${escHtml(p.to)}</div>
+                </div>
+                <div class="pitch-time">${timeStr}</div>
+                ${badgeHtml}
+                ${actionsHtml}
+            </div>`;
+        }).join('');
+    }
+
+    function formatTime(iso) {
+        if (!iso) return '';
+        const d = new Date(iso);
+        const diff = Date.now() - d.getTime();
+        const min = Math.floor(diff / 60000);
+        if (min < 1)  return 'Just now';
+        if (min < 60) return min + 'm ago';
+        const hr = Math.floor(min / 60);
+        if (hr < 24)  return hr + 'h ago';
+        return d.toLocaleDateString();
+    }
+
+    function escHtml(str) {
+        const el = document.createElement('span');
+        el.textContent = str;
+        return el.innerHTML;
+    }
+
+    function updateBadges() {
+        const sentLen     = loadPitches('sent').length;
+        const proposalsLen= loadPitches('proposals').filter(p=>p.status==='pending').length;
+        const acceptedLen = loadPitches('accepted').length;
+
+        function setBadge(id, n) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            if (n > 0) { el.textContent = n; el.classList.remove('hidden'); }
+            else { el.classList.add('hidden'); }
+        }
+        setBadge('notif-sent',      sentLen);
+        setBadge('notif-proposals', proposalsLen);
+        setBadge('notif-accepted',  acceptedLen);
+    }
+
+    /* ── Init: render on page load ───────────────────────── */
+    renderPitchList('sent');
+    renderPitchList('proposals');
+    renderPitchList('accepted');
+    updateBadges();
+
+    /* ── Hook into email send success ───────────────────── */
+    // Intercept the sendEmailBtn so we can record pitch after success
+    document.addEventListener('DOMContentLoaded', () => {
+        const btn = document.getElementById('send-email-btn');
+        if (!btn) return;
+        // Wrap: observe aria-label change to 'Sent!'
+        const observer = new MutationObserver(() => {
+            if (btn.querySelector('span') && btn.querySelector('span').textContent === 'Sent!') {
+                const to      = document.getElementById('email-to')?.value || '';
+                const nameEl  = document.getElementById('modal-buyer-name');
+                const parts   = (nameEl?.textContent || '').split(' · ');
+                const name    = parts[0] || 'Buyer';
+                const company = parts[1] || '';
+                recordSentPitch(to, name, company);
+            }
+        });
+        observer.observe(btn, { childList: true, subtree: true });
+    });
+    </script>
 </body>
 </html>
